@@ -1,56 +1,57 @@
-/****************************************************************
- * Objetivo: Realizara a integração do Aluno com o Banco de Dados
- * Data: 14/04/2023
+/*
+ * Objetivo: Realizar intereração do Aluno com o Banco de Dados
  * Autor: Moreno
+ * Data: 14/04/2023
  * Versão: 1.0
- ****************************************************************/
+ */
+// Import da biblioteca do prisma client (responsável por manipular dados no BD)
+var { PrismaClient } = require('@prisma/client');
 
-//Inserir um novo Registro no Banco de Dados
-const insertAluno = function (dadosAluno) {
+// Instancia da classe do PrismaClient
+var prisma = new PrismaClient();
+
+// Inserir um novo registro no Banco de Dados
+const insertAluno = async function (dadosAluno) {
+    // Script SQL para inserir os dados no BD
+    let sql = `insert into tbl_aluno (nome, cpf, rg, data_nascimento, email)values('${dadosAluno.nome}', '${dadosAluno.cpf}', '${dadosAluno.rg}', '${dadosAluno.data_nascimento}', '${dadosAluno.email}')`;
+    // Executa o script SQL no BD e recebemos o retorno se deu certo ou não
+    let result = await prisma.$executeRawUnsafe(sql);
 
 
-}
-
-//Atualizar um novo Registro no Banco de Dados
+    if(result)
+        return true
+    else
+        return false    
+};
+// Atualizar um novo registro no Banco de Dados
 const updateAluno = function (dadosAluno) {
-
-
-}
-
-//Excluir um Registro no Banco de Dados
+};
+// Excluir um novo registro no Banco de Dados
 const deleteAluno = function (id) {
-
-
-}
-//Retorna todos os Registro no Banco de Dados
+};
+// Retorna todos os Registros do Banco de Dados
 const selectAllAluno = async function () {
-    //Impot da biblioteca do prisma client (responsavel por manipular dados no BD)
-    let { PrismaClient } = require('@prisma/client')
 
-    //Instancia da classe do PrimaClient
-    let prisma = new PrismaClient();
+    // Variavel com o scriptSQL para executar o BD
+    let sql = 'select * from tbl_aluno';
 
-    //Variavel com o scriptSQL para executar no BD
-    let sql = 'select * from tbl_aluno'
+    // Executa no BD o scriptSQL
+    // $queryRawUnsafe() é utilizado quando o scriptSQL esta em uma variavel
+    // $queryRaw() é utilizado quando passar o script direto no metodo (EX: $queryRaw('select * from tbl_aluno'))
+    let rsAluno = await prisma.$queryRawUnsafe(sql);
 
-    //Executa no BD o scriptSQL
-    //$queryRawUnsafe() é utilizado quando o scriptSQL esta em uma variavel
-    //$queryRaw() é utilizado quando o script direto no metodo (Ex: $queryRaw('select *from tbl_aluno'))
-    let rsAluno = await prisma.$queryRawUnsafe(sql)
-    
-    //Valida se o BD retornou algum registro 
+    // Valida se o BO retornou algum registro
     if (rsAluno.length > 0)
         return rsAluno;
     else
         return false;
+
+};
+// Retorna um registro filtrado pelo ID do Banco de Dados
+const selectByidAluno = function (id) {
 };
 
-//Retorna um Registro filtrado pelo ID do Banco de Dados
-const selectByIdAluno = function (id) {
-
-
-}
-
 module.exports = {
-    selectAllAluno
-}
+    selectAllAluno,
+    insertAluno
+};
